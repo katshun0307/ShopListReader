@@ -34,31 +34,29 @@ def decode_jan(key_code_list):
 
 
 def main():
-    with open('/dev/input/event0', 'rb') as fp:
-        counter = 0
-        # list of letter codes
-        current_keycode_list = []
-        while True:
-            try:
-                # read packet
-                buffer = fp.read(24)
-                key = struct.unpack('4IHHI', buffer)[3]
-                if counter is 0 and int(key) == 458792:
-                    # new line input
-                    executor.submit(decode_jan, current_keycode_list)
-                    current_keycode_list = []  # refresh current jan
-                elif counter is 0:
-                    current_keycode_list.append(str(key))
-                else:
-                    pass
-                counter = (counter + 1) % 4
-            except OSError:
-                # device is disconnected
-                try:
-                    # connect again
-                    fp = open('/dev/input/event0', 'rb')
-                except OSError:
-                    pass
+    # modulo 4 counter
+    counter = 0
+    # list of key codes
+    current_keycode_list = []
+
+    while True:
+        try:
+            with open('/dev/input/event0', 'rb') as fp:
+                while True:
+                    # while event0 is open
+                    buffer = fp.read(24)
+                    key = struct.unpack('4IHHI', buffer)[3]
+                    if counter is 0 and int(key) == 458792:
+                        # new line input
+                        executor.submit(decode_jan, current_keycode_list)
+                        current_keycode_list = []  # refresh current jan
+                    elif counter is 0:
+                        current_keycode_list.append(str(key))
+                    else:
+                        pass
+                    counter = (counter + 1) % 4
+        except OSError:
+            pass  # device disconnected
 
 
 if __name__ == '__main__':
