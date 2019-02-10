@@ -33,7 +33,7 @@ def clean_product_name(product_name: str):
 
 def get_name_from_jan(jan_code):
     url = "http://shopping.yahooapis.jp/ShoppingWebService/V1/itemSearch?" \
-          "appid=%s&jan=%s" % (YAHOO_CLIENT_ID, jan_code)
+          "appid=dj00aiZpPXFSZkd4U2lLU0NweCZzPWNvbnN1bWVyc2VjcmV0Jng9ZjI-&jan=%s" % jan_code
     r = requests.get(url)
     root = ET.fromstring(r.text)
     name_elements = root.findall("./{urn:yahoo:jp:itemSearch}Result/{urn:yahoo:jp:itemSearch}Hit/"

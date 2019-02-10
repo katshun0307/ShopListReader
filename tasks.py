@@ -66,4 +66,6 @@ if __name__ == '__main__':
         parents=[oauth2client.tools.argparser]
     ).parse_args()
     shoplist = Tasklist("shoplist")
-    shoplist.add_task("hogehoge")
+    print(shoplist.add_task("hogehoge"))
+
+
