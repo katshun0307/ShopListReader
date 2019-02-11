@@ -17,21 +17,20 @@ YAHOO_CLIENT_SECRET = config.YAHOO_CLIENT_SECRET
 
 unwanted_chars = ['【', '】']
 
-# メルティーキッス 焦がしバターキャラメル
-sample_jan = 4902777060873
-# octomore
-sample_jan_2 = 5055807406154
-
-
 def clean_product_name(product_name: str):
     space_pattern = re.compile(r"\s+", re.UNICODE)
-    return space_pattern.sub('', product_name)
-    # for remove_char in unwanted_chars:
-    #     product_name.replace(remove_char, '')
-    # return product_name
+    non_space_name = space_pattern.sub('', product_name)
+    for remove_char in unwanted_chars:
+        non_space_name.replace(remove_char, '')
+    return non_space_name
 
 
 def get_name_from_jan(jan_code):
+    """
+    get multiple names from yahoo shopping api
+    :param jan_code:
+    :return:
+    """
     url = "http://shopping.yahooapis.jp/ShoppingWebService/V1/itemSearch?" \
           "appid=dj00aiZpPXFSZkd4U2lLU0NweCZzPWNvbnN1bWVyc2VjcmV0Jng9ZjI-&jan=%s" % jan_code
     r = requests.get(url)
@@ -42,9 +41,20 @@ def get_name_from_jan(jan_code):
 
 
 def get_product_name(jan_code):
+    """
+    get product name from yahoo api
+    :param jan_code:
+    :return: name of item
+    """
     product_names = get_name_from_jan(jan_code)
-    lcs_instance = LCS()
-    return lcs_instance.lcs(product_names)
+    try:
+        lcs_instance = LCS()
+        name = lcs_instance.lcs(product_names)
+        if name == "":
+            raise ValueError
+        return lcs_instance.lcs(product_names)
+    except Exception as e:
+        return "unknown item %s" % jan_code
 
 
 class LCS:
@@ -68,4 +78,4 @@ class LCS:
 
 
 if __name__ == '__main__':
-    print(get_name_from_jan(sample_jan_2))
+    pass

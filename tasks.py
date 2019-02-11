@@ -52,6 +52,10 @@ class Tasklist:
         lists = results.get('items', [])
         return lists
 
+    def get_task(self, task_id):
+        result = self.service.tasks().get(tasklist=self.list_id, task=task_id).execute()
+        return result
+
     def add_task(self, name):
         result = self.service.tasks().insert(tasklist=self.list_id, body={'title': name}).execute()
         return result

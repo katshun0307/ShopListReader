@@ -59,7 +59,7 @@ def wait():
                     else:
                         pass
                     counter = (counter + 1) % 4
-        except OSError:
+        except (OSError, FileNotFoundError):
             pass  # device disconnected
 
 
